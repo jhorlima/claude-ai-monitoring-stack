@@ -1,0 +1,68 @@
+// Public collector profile focused on AI usage telemetry.
+// It accepts OTLP logs/metrics and forwards them to Loki/Prometheus.
+
+prometheus.remote_write "local" {
+  endpoint {
+    url = sys.env("PROMETHEUS_URL")
+  }
+}
+
+loki.write "local" {
+  endpoint {
+    url = sys.env("LOKI_URL")
+  }
+}
+
+livedebugging {}
+
+otelcol.exporter.prometheus "default" {
+  forward_to = [prometheus.remote_write.local.receiver]
+}
+
+otelcol.exporter.loki "default" {
+  forward_to = [loki.write.local.receiver]
+}
+
+otelcol.processor.attributes "inject_node" {
+  action {
+    key    = "node.name"
+    value  = sys.env("NODE_NAME")
+    action = "upsert"
+  }
+
+  action {
+    key    = "loki.resource.labels"
+    value  = "service.name,service.namespace,deployment.environment,service.version"
+    action = "insert"
+  }
+
+  output {
+    metrics = [otelcol.exporter.prometheus.default.input]
+    logs    = [otelcol.exporter.loki.default.input]
+  }
+}
+
+otelcol.processor.batch "default" {
+  send_batch_size = 1024
+  timeout         = "5s"
+
+  output {
+    metrics = [otelcol.processor.attributes.inject_node.input]
+    logs    = [otelcol.processor.attributes.inject_node.input]
+  }
+}
+
+otelcol.receiver.otlp "default" {
+  grpc {
+    endpoint = "0.0.0.0:4317"
+  }
+
+  http {
+    endpoint = "0.0.0.0:4318"
+  }
+
+  output {
+    metrics = [otelcol.processor.batch.default.input]
+    logs    = [otelcol.processor.batch.default.input]
+  }
+}

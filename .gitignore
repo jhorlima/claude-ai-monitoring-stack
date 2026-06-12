@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# Docker volumes/logs
+**/data/
