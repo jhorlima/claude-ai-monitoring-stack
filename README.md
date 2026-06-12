@@ -1,5 +1,10 @@
 # AI Monitoring Stack (Public Template)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+![Grafana](https://img.shields.io/badge/Grafana-Dashboard-F46800)
+![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-OTLP-425CC7)
+![Docker Compose](https://img.shields.io/badge/Docker%20Compose-Ready-2496ED)
+
 Public, self-hosted monitoring template for AI tooling usage analysis.
 
 This template focuses on operational observability for tools like Claude Code and Claude Cowork, with a practical business angle: understanding cost versus outcomes.
@@ -44,17 +49,22 @@ Then open:
 - OTLP gRPC: `localhost:4317`
 - OTLP HTTP: `localhost:4318`
 
-## Dashboard screenshot
+## Dashboard preview
 
-Cover preview:
+Quick visual (great for social preview):
 
 ![Claude Code usage dashboard cover](./docs/images/claude-code-usage-cover.webp)
 
-Full screenshot (click to open full resolution):
+Deep dive (click for full resolution):
 
 <a href="./docs/images/claude-code-usage-full.webp">
   <img src="./docs/images/claude-code-usage-full.webp" alt="Claude Code usage dashboard full screenshot" width="900" />
 </a>
+
+If you are sharing this repository on LinkedIn, you can use:
+
+- `docs/images/claude-code-usage-cover.webp` as the post cover
+- `docs/images/claude-code-usage-full.webp` to show detailed widgets and filters
 
 ## How to read value signals
 
