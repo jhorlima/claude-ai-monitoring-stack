@@ -44,6 +44,18 @@ Then open:
 - OTLP gRPC: `localhost:4317`
 - OTLP HTTP: `localhost:4318`
 
+## Dashboard screenshot
+
+Cover preview:
+
+![Claude Code usage dashboard cover](./docs/images/claude-code-usage-cover.webp)
+
+Full screenshot (click to open full resolution):
+
+<a href="./docs/images/claude-code-usage-full.webp">
+  <img src="./docs/images/claude-code-usage-full.webp" alt="Claude Code usage dashboard full screenshot" width="900" />
+</a>
+
 ## How to read value signals
 
 The dashboard is not a full business KPI system by itself. It provides strong operational evidence (usage, cost, efficiency proxies) that should be interpreted together with product and delivery metrics.
