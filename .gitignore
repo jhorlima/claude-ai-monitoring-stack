@@ -8,7 +8,3 @@
 
 # Docker volumes/logs
 **/data/
-
-# Local-only docs (not for publication)
-docs/linkedin-post-guide.md
-docs/linkedin-post-guide.local.md
