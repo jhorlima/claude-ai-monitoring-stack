@@ -15,7 +15,7 @@
       }
     ]
   },
-  "description": "Uso do Claude Code na organização — tokens, custo, modelos, tools, heatmap por dia/hora, usuários. Fonte: telemetria OTLP nativa do Claude Code (https://code.claude.com/docs/en/monitoring-usage).",
+  "description": "Visão híbrida: blocos Claude Code usam Prometheus (métricas OTLP); blocos Code + Cowork usam Loki (eventos OTLP). Cada seção indica a fonte no título.",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
@@ -46,7 +46,476 @@
       },
       "id": 100,
       "panels": [],
-      "title": "📊 KPIs",
+      "title": "Claude Code · métricas (Prometheus)",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 0,
+        "y": 1
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "sum(max_over_time(claude_code_session_count_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\"}[$__range]))",
+          "refId": "A",
+          "instant": false,
+          "range": true
+        }
+      ],
+      "title": "Sessions",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 4,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 3,
+        "y": 1
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "sum(max_over_time(claude_code_cost_usage_USD_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\"}[$__range]))",
+          "refId": "A",
+          "instant": false,
+          "range": true
+        }
+      ],
+      "title": "Cost (USD)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 6,
+        "y": 1
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "sum(max_over_time(claude_code_active_time_seconds_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\"}[$__range]))",
+          "refId": "A",
+          "instant": false,
+          "range": true
+        }
+      ],
+      "title": "Active Time",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 9,
+        "y": 1
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "sum(max_over_time(claude_code_token_usage_tokens_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\", type=\"input\"}[$__range]))",
+          "refId": "A",
+          "instant": false,
+          "range": true
+        }
+      ],
+      "title": "Input Tokens",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 12,
+        "y": 1
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "sum(max_over_time(claude_code_token_usage_tokens_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\", type=\"output\"}[$__range]))",
+          "refId": "A",
+          "instant": false,
+          "range": true
+        }
+      ],
+      "title": "Output Tokens",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 15,
+        "y": 1
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "sum(max_over_time(claude_code_token_usage_tokens_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\", type=\"cacheRead\"}[$__range]))",
+          "refId": "A",
+          "instant": false,
+          "range": true
+        }
+      ],
+      "title": "Cache Read Tokens",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 18,
+        "y": 1
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "sum(max_over_time(claude_code_token_usage_tokens_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\", type=\"cacheCreation\"}[$__range]))",
+          "refId": "A",
+          "instant": false,
+          "range": true
+        }
+      ],
+      "title": "Cache Write Tokens",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "id": 107,
+      "panels": [],
+      "title": "Code + Cowork · KPIs por eventos (Loki)",
       "type": "row"
     },
     {
@@ -77,9 +546,9 @@
         "h": 4,
         "w": 4,
         "x": 0,
-        "y": 1
+        "y": 6
       },
-      "id": 1,
+      "id": 60,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -105,7 +574,8 @@
             "uid": "ffd8h30nfuxhcd"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${model:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} [$__range]))",
+          "expr": "sum(count_over_time({service_name=~\"claude-code|cowork\", attributes_user_email=~\"$user_email\", attributes_model=~\"$model\", attributes_effort=~\"$effort\", attributes_query_source=~\"$query_source\", attributes_terminal_type=~\"$terminal_type\"} | json | body=\"claude_code.api_request\" | __error__=\"\" [$__range]))",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -132,7 +602,8 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "currencyUSD",
+          "decimals": 4
         },
         "overrides": []
       },
@@ -140,9 +611,9 @@
         "h": 4,
         "w": 4,
         "x": 4,
-        "y": 1
+        "y": 6
       },
-      "id": 2,
+      "id": 61,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -168,11 +639,12 @@
             "uid": "ffd8h30nfuxhcd"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${model:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} [$__range]))",
+          "expr": "sum(sum_over_time({service_name=~\"claude-code|cowork\", attributes_user_email=~\"$user_email\", attributes_model=~\"$model\", attributes_effort=~\"$effort\", attributes_query_source=~\"$query_source\", attributes_terminal_type=~\"$terminal_type\"} | json | body=\"claude_code.api_request\" | __error__=\"\" | unwrap attributes_cost_usd [$__range]))",
+          "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "API Requests (count)",
+      "title": "Cost (USD)",
       "type": "stat"
     },
     {
@@ -185,7 +657,6 @@
           "color": {
             "mode": "thresholds"
           },
-          "decimals": 2,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -196,7 +667,7 @@
               }
             ]
           },
-          "unit": "currencyUSD"
+          "unit": "short"
         },
         "overrides": []
       },
@@ -204,9 +675,9 @@
         "h": 4,
         "w": 4,
         "x": 8,
-        "y": 1
+        "y": 6
       },
-      "id": 3,
+      "id": 62,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -232,133 +703,8 @@
             "uid": "ffd8h30nfuxhcd"
           },
           "editorMode": "code",
-          "expr": "sum(sum_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${model:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} | unwrap attributes_cost_usd [$__range]))",
-          "refId": "A"
-        }
-      ],
-      "title": "Cost Summary (USD)",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "ffd8h30nfuxhcd"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "blue",
-                "value": 0
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 12,
-        "y": 1
-      },
-      "id": 4,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.3.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "ffd8h30nfuxhcd"
-          },
-          "editorMode": "code",
-          "expr": "sum(count_over_time({service_name=~\"claude-code|cowork\"} | json | __error__=\"\" ${user_email:pipe} ${model:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} [5m]))",
-          "refId": "A"
-        }
-      ],
-      "title": "Event count (5min)",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "ffd8h30nfuxhcd"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 16,
-        "y": 1
-      },
-      "id": 5,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.3.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "ffd8h30nfuxhcd"
-          },
-          "editorMode": "code",
-          "expr": "sum(sum_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${model:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} | unwrap attributes_input_tokens [$__range]))",
+          "expr": "sum(sum_over_time({service_name=~\"claude-code|cowork\", attributes_user_email=~\"$user_email\", attributes_model=~\"$model\", attributes_effort=~\"$effort\", attributes_query_source=~\"$query_source\", attributes_terminal_type=~\"$terminal_type\"} | json | body=\"claude_code.api_request\" | __error__=\"\" | unwrap attributes_input_tokens [$__range]))",
+          "queryType": "range",
           "refId": "A"
         }
       ],
@@ -392,10 +738,10 @@
       "gridPos": {
         "h": 4,
         "w": 4,
-        "x": 20,
-        "y": 1
+        "x": 12,
+        "y": 6
       },
-      "id": 6,
+      "id": 63,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -421,11 +767,140 @@
             "uid": "ffd8h30nfuxhcd"
           },
           "editorMode": "code",
-          "expr": "sum(sum_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${model:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} | unwrap attributes_output_tokens [$__range]))",
+          "expr": "sum(sum_over_time({service_name=~\"claude-code|cowork\", attributes_user_email=~\"$user_email\", attributes_model=~\"$model\", attributes_effort=~\"$effort\", attributes_query_source=~\"$query_source\", attributes_terminal_type=~\"$terminal_type\"} | json | body=\"claude_code.api_request\" | __error__=\"\" | unwrap attributes_output_tokens [$__range]))",
+          "queryType": "range",
           "refId": "A"
         }
       ],
       "title": "Output Tokens",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "ffd8h30nfuxhcd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 6
+      },
+      "id": 64,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "ffd8h30nfuxhcd"
+          },
+          "editorMode": "code",
+          "expr": "sum(sum_over_time({service_name=~\"claude-code|cowork\", attributes_user_email=~\"$user_email\", attributes_model=~\"$model\", attributes_effort=~\"$effort\", attributes_query_source=~\"$query_source\", attributes_terminal_type=~\"$terminal_type\"} | json | body=\"claude_code.api_request\" | __error__=\"\" | unwrap attributes_cache_read_tokens [$__range]))",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Cache Read Tokens",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "ffd8h30nfuxhcd"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 6
+      },
+      "id": 65,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "ffd8h30nfuxhcd"
+          },
+          "editorMode": "code",
+          "expr": "sum(sum_over_time({service_name=~\"claude-code|cowork\", attributes_user_email=~\"$user_email\", attributes_model=~\"$model\", attributes_effort=~\"$effort\", attributes_query_source=~\"$query_source\", attributes_terminal_type=~\"$terminal_type\"} | json | body=\"claude_code.api_request\" | __error__=\"\" | unwrap attributes_cache_creation_tokens [$__range]))",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Cache Write Tokens",
       "type": "stat"
     },
     {
@@ -434,17 +909,17 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 5
+        "y": 10
       },
       "id": 101,
       "panels": [],
-      "title": "🎯 Tokens & Custo",
+      "title": "Claude Code · tokens e custo (Prometheus)",
       "type": "row"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "ffd8h30nfuxhcd"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -499,7 +974,7 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "currencyUSD"
         },
         "overrides": []
       },
@@ -507,7 +982,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 6
+        "y": 11
       },
       "id": 10,
       "options": {
@@ -529,22 +1004,24 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "ffd8h30nfuxhcd"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${model:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} [1m])) / 60",
-          "legendFormat": "Events/sec",
-          "refId": "A"
+          "expr": "sum(rate(claude_code_cost_usage_USD_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\"}[5m]))",
+          "refId": "A",
+          "legendFormat": "USD/sec",
+          "range": true,
+          "instant": false
         }
       ],
-      "title": "API Request rate (events/sec)",
+      "title": "Spend Rate (USD/s)",
       "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "ffd8h30nfuxhcd"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -607,7 +1084,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 6
+        "y": 11
       },
       "id": 11,
       "options": {
@@ -629,22 +1106,24 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "ffd8h30nfuxhcd"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by (attributes_model) (rate({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} [5m]))",
-          "legendFormat": "{{attributes_model}}",
-          "refId": "A"
+          "expr": "sum by (model) (rate(claude_code_cost_usage_USD_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\"}[5m]))",
+          "refId": "A",
+          "legendFormat": "{{model}}",
+          "range": true,
+          "instant": false
         }
       ],
-      "title": "API Requests por modelo",
+      "title": "Spend Rate by Model (USD/s)",
       "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "ffd8h30nfuxhcd"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -685,7 +1164,7 @@
               "mode": "off"
             }
           },
-          "decimals": 0,
+          "decimals": 4,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -700,7 +1179,7 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "currencyUSD"
         },
         "overrides": []
       },
@@ -708,7 +1187,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 14
+        "y": 19
       },
       "id": 12,
       "options": {
@@ -728,26 +1207,29 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "ffd8h30nfuxhcd"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by (attributes_model) (count_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} [$__range]))",
-          "legendFormat": "{{attributes_model}}",
-          "refId": "A"
+          "expr": "sum by (model) (max_over_time(claude_code_cost_usage_USD_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\"}[$__range]))",
+          "refId": "A",
+          "legendFormat": "{{model}}",
+          "range": true,
+          "instant": false
         }
       ],
-      "title": "Requests por modelo (count)",
+      "title": "Cost by Model (USD)",
       "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "ffd8h30nfuxhcd"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
           "decimals": 0,
+          "displayName": "${__field.labels.user_email}",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -770,7 +1252,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 14
+        "y": 19
       },
       "id": 13,
       "options": {
@@ -784,7 +1266,7 @@
         "maxVizHeight": 300,
         "minVizHeight": 16,
         "minVizWidth": 8,
-        "namePlacement": "auto",
+        "namePlacement": "left",
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
@@ -801,19 +1283,141 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "ffd8h30nfuxhcd"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
-          "direction": "backward",
           "editorMode": "code",
-          "expr": "topk(20, \n  sum by (attributes_user_email) (\n    sum_over_time(\n      {service_name=~\"claude-code|cowork\"} \n      | json \n      | body=\"claude_code.api_request\" \n      | __error__=\"\"\n      ${model:pipe} \n      ${effort:pipe} \n      ${query_source:pipe} \n      ${terminal_type:pipe}\n      | label_format total_tokens=`{{add .attributes_input_tokens .attributes_output_tokens}}`\n      | unwrap total_tokens [$__range]\n    )\n  )\n)   ",
-          "legendFormat": "{{attributes_user_email}}",
-          "queryType": "range",
-          "refId": "A"
+          "expr": "topk(20, sum by (user_email) (max_over_time(claude_code_token_usage_tokens_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\"}[$__range])))",
+          "refId": "A",
+          "legendFormat": "{{user_email}}",
+          "instant": true,
+          "range": false
         }
       ],
-      "title": "Top 20 usuários (by total tokens)",
+      "title": "Top 20 Users by Tokens",
       "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 25,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "12.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "sum by (model) (max_over_time(claude_code_token_usage_tokens_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\", type=\"cacheRead\"}[$__range]))",
+          "legendFormat": "{{model}} cache read",
+          "refId": "A",
+          "instant": false,
+          "range": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "sum by (model) (max_over_time(claude_code_token_usage_tokens_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\", type=\"cacheCreation\"}[$__range]))",
+          "legendFormat": "{{model}} cache write",
+          "refId": "B",
+          "instant": false,
+          "range": true
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "sum by (model) (max_over_time(claude_code_token_usage_tokens_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\", type=\"input\"}[$__range]))",
+          "legendFormat": "{{model}} input",
+          "refId": "C",
+          "instant": false,
+          "range": true
+        }
+      ],
+      "title": "Token Mix by Model (input vs cache read vs cache write)",
+      "type": "timeseries"
     },
     {
       "collapsed": false,
@@ -821,11 +1425,11 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 22
+        "y": 35
       },
       "id": 102,
       "panels": [],
-      "title": "🗓️ Heatmap de uso (hora × dia da semana)",
+      "title": "Code + Cowork · heatmap (Loki)",
       "type": "row"
     },
     {
@@ -854,7 +1458,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 23
+        "y": 36
       },
       "id": 20,
       "options": {
@@ -881,7 +1485,7 @@
           "color": "rgba(255,0,255,0.7)"
         },
         "filterValues": {
-          "le": 1e-9
+          "le": 1e-09
         },
         "legend": {
           "show": true
@@ -909,7 +1513,7 @@
           },
           "direction": "backward",
           "editorMode": "code",
-          "expr": "sum(count_over_time({service_name=~\"claude-code|cowork\", __error__=\"\"} ${user_email:pipe} ${model:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} [1h]))",
+          "expr": "sum(count_over_time({service_name=~\"claude-code|cowork\", attributes_user_email=~\"$user_email\", attributes_model=~\"$model\", attributes_effort=~\"$effort\", attributes_query_source=~\"$query_source\", attributes_terminal_type=~\"$terminal_type\"} | json | __error__=\"\" [1h]))",
           "queryType": "range",
           "refId": "A"
         }
@@ -923,11 +1527,11 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 33
+        "y": 46
       },
       "id": 103,
       "panels": [],
-      "title": "🛠️ Tools & decisões",
+      "title": "Code + Cowork · tools e decisões (Loki)",
       "type": "row"
     },
     {
@@ -937,6 +1541,7 @@
       },
       "fieldConfig": {
         "defaults": {
+          "displayName": "${__field.labels.attributes_tool_name}",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -959,7 +1564,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 34
+        "y": 47
       },
       "id": 30,
       "options": {
@@ -973,7 +1578,7 @@
         "maxVizHeight": 300,
         "minVizHeight": 16,
         "minVizWidth": 8,
-        "namePlacement": "auto",
+        "namePlacement": "left",
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
@@ -994,12 +1599,13 @@
             "uid": "ffd8h30nfuxhcd"
           },
           "editorMode": "code",
-          "expr": "topk(20, sum by (attributes_tool_name) (count_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.tool_decision\" | __error__=\"\" ${user_email:pipe} ${model:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} [$__range])))",
+          "expr": "topk(20, sum by (attributes_tool_name) (count_over_time({service_name=~\"claude-code|cowork\", attributes_user_email=~\"$user_email\", attributes_model=~\"$model\", attributes_effort=~\"$effort\", attributes_query_source=~\"$query_source\", attributes_terminal_type=~\"$terminal_type\"} | json | body=\"claude_code.tool_decision\" | __error__=\"\" [$__range])))",
           "legendFormat": "{{attributes_tool_name}}",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
-      "title": "Top tools usadas",
+      "title": "Top tools (Read, Bash, Grep, MCP…)",
       "type": "bargauge"
     },
     {
@@ -1028,7 +1634,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 34
+        "y": 47
       },
       "id": 31,
       "options": {
@@ -1068,7 +1674,7 @@
             "uid": "ffd8h30nfuxhcd"
           },
           "editorMode": "code",
-          "expr": "sum by (attributes_decision) (count_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.tool_decision\" | __error__=\"\" ${user_email:pipe} ${model:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} [$__range]))",
+          "expr": "sum by (attributes_decision) (count_over_time({service_name=~\"claude-code|cowork\", attributes_user_email=~\"$user_email\", attributes_model=~\"$model\", attributes_effort=~\"$effort\", attributes_query_source=~\"$query_source\", attributes_terminal_type=~\"$terminal_type\"} | json | body=\"claude_code.tool_decision\" | __error__=\"\" [$__range]))",
           "legendFormat": "{{attributes_decision}}",
           "refId": "A"
         }
@@ -1089,7 +1695,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 43
+        "y": 56
       },
       "id": 32,
       "options": {
@@ -1114,11 +1720,11 @@
             "uid": "ffd8h30nfuxhcd"
           },
           "editorMode": "code",
-          "expr": "{service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${model:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} | line_format \"user={{.attributes_user_email}} model={{.attributes_model}} input={{.attributes_input_tokens}} output={{.attributes_output_tokens}} cost={{.attributes_cost_usd}}\"",
+          "expr": "{service_name=~\"claude-code|cowork\", attributes_user_email=~\"$user_email\", attributes_model=~\"$model\", attributes_effort=~\"$effort\", attributes_query_source=~\"$query_source\", attributes_terminal_type=~\"$terminal_type\"} | json | body=\"claude_code.api_request\" | __error__=\"\" | line_format \"user={{ .attributes_user_email }} model={{ .attributes_model }} input={{ .attributes_input_tokens }} output={{ .attributes_output_tokens }} cost={{ .attributes_cost_usd }}\"",
           "refId": "A"
         }
       ],
-      "title": "Claude Code API Requests (últimas 100) (Code + Cowork)",
+      "title": "Últimas requisições API (log)",
       "type": "logs"
     },
     {
@@ -1127,17 +1733,17 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 53
+        "y": 66
       },
       "id": 105,
       "panels": [],
-      "title": "⚡ Esforço & Performance",
+      "title": "Claude Code · esforço e performance (Prometheus)",
       "type": "row"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "ffd8h30nfuxhcd"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1196,7 +1802,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 54
+        "y": 67
       },
       "id": 41,
       "options": {
@@ -1218,22 +1824,24 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "ffd8h30nfuxhcd"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by (attributes_effort) (count_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${model:pipe} ${query_source:pipe} ${terminal_type:pipe} [$__range]))",
-          "legendFormat": "{{attributes_effort}}",
-          "refId": "A"
+          "expr": "sum by (effort) (max_over_time(claude_code_token_usage_tokens_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\"}[$__range]))",
+          "refId": "A",
+          "legendFormat": "{{effort}}",
+          "range": true,
+          "instant": false
         }
       ],
-      "title": "Solicitações por nível de esforço",
+      "title": "Tokens por nível de esforço",
       "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "ffd8h30nfuxhcd"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1284,7 +1892,7 @@
               }
             ]
           },
-          "unit": "bytes"
+          "unit": "currencyUSD"
         },
         "overrides": []
       },
@@ -1292,7 +1900,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 54
+        "y": 67
       },
       "id": 42,
       "options": {
@@ -1314,17 +1922,130 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "ffd8h30nfuxhcd"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by (attributes_speed) (count_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${model:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} [$__range]))",
-          "legendFormat": "{{attributes_speed}}",
-          "refId": "A"
+          "expr": "sum by (speed) (max_over_time(claude_code_cost_usage_USD_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\"}[$__range]))",
+          "refId": "A",
+          "legendFormat": "{{speed}}",
+          "range": true,
+          "instant": false
         }
       ],
-      "title": "Solicitações por velocidade",
+      "title": "Cost by Speed (USD)",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 84
+      },
+      "id": 44,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "12.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "sum by (query_source) (max_over_time(claude_code_token_usage_tokens_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\", type=\"output\"}[$__range]))",
+          "refId": "A",
+          "legendFormat": "{{query_source}}",
+          "range": true,
+          "instant": false
+        }
+      ],
+      "title": "Tokens por fonte de consulta",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 75
+      },
+      "id": 108,
+      "panels": [],
+      "title": "Code + Cowork · detalhe por requisição (Loki)",
+      "type": "row"
     },
     {
       "datasource": {
@@ -1386,9 +2107,9 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
-        "x": 16,
-        "y": 54
+        "w": 12,
+        "x": 0,
+        "y": 76
       },
       "id": 43,
       "options": {
@@ -1414,191 +2135,13 @@
             "uid": "ffd8h30nfuxhcd"
           },
           "editorMode": "code",
-          "expr": "avg by (attributes_effort) (avg_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${model:pipe} ${query_source:pipe} ${terminal_type:pipe} | unwrap attributes_duration_ms [$__range]))",
+          "expr": "avg by (attributes_effort) (avg_over_time({service_name=~\"claude-code|cowork\", attributes_user_email=~\"$user_email\", attributes_model=~\"$model\", attributes_effort=~\"$effort\", attributes_query_source=~\"$query_source\", attributes_terminal_type=~\"$terminal_type\"} | json | body=\"claude_code.api_request\" | __error__=\"\" | unwrap attributes_duration_ms [$__range]))",
           "legendFormat": "{{attributes_effort}}",
           "refId": "A"
         }
       ],
       "title": "Duração média por esforço",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "ffd8h30nfuxhcd"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 20,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "normal"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 62
-      },
-      "id": 44,
-      "options": {
-        "legend": {
-          "calcs": [
-            "sum"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "desc"
-        }
-      },
-      "pluginVersion": "12.3.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "ffd8h30nfuxhcd"
-          },
-          "editorMode": "code",
-          "expr": "sum by (attributes_query_source) (count_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${model:pipe} ${effort:pipe} ${terminal_type:pipe} [$__range]))",
-          "legendFormat": "{{attributes_query_source}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Solicitações por fonte de consulta",
-      "type": "timeseries"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 70
-      },
-      "id": 106,
-      "panels": [],
-      "title": "💰 Custo & Eficiência",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "ffd8h30nfuxhcd"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "decimals": 2,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          },
-          "unit": "currencyUSD"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 71
-      },
-      "id": 50,
-      "options": {
-        "displayMode": "gradient",
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "maxVizHeight": 300,
-        "minVizHeight": 16,
-        "minVizWidth": 8,
-        "namePlacement": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showUnfilled": true,
-        "sizing": "auto",
-        "valueMode": "color"
-      },
-      "pluginVersion": "12.3.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "ffd8h30nfuxhcd"
-          },
-          "editorMode": "code",
-          "expr": "topk(20, sum by (attributes_user_email) (sum_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${model:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} | unwrap attributes_cost_usd [$__range])))",
-          "legendFormat": "{{attributes_user_email}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Top 20 usuários (by total cost)",
-      "type": "bargauge"
     },
     {
       "datasource": {
@@ -1660,10 +2203,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 8,
         "w": 12,
         "x": 12,
-        "y": 71
+        "y": 76
       },
       "id": 51,
       "options": {
@@ -1689,7 +2232,7 @@
             "uid": "ffd8h30nfuxhcd"
           },
           "editorMode": "code",
-          "expr": "avg by (attributes_model) (avg_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} | unwrap attributes_cost_usd [$__range]))",
+          "expr": "avg by (attributes_model) (avg_over_time({service_name=~\"claude-code|cowork\", attributes_user_email=~\"$user_email\", attributes_model=~\"$model\", attributes_effort=~\"$effort\", attributes_query_source=~\"$query_source\", attributes_terminal_type=~\"$terminal_type\"} | json | body=\"claude_code.api_request\" | __error__=\"\" | unwrap attributes_cost_usd [$__range]))",
           "legendFormat": "{{attributes_model}}",
           "refId": "A"
         }
@@ -1698,9 +2241,94 @@
       "type": "timeseries"
     },
     {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 92
+      },
+      "id": 106,
+      "panels": [],
+      "title": "Claude Code · custo e eficiência (Prometheus)",
+      "type": "row"
+    },
+    {
       "datasource": {
-        "type": "loki",
-        "uid": "ffd8h30nfuxhcd"
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 4,
+          "displayName": "${__field.labels.user_email}",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 93
+      },
+      "id": 50,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "left",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.3.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "topk(20, sum by (user_email) (max_over_time(claude_code_cost_usage_USD_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\"}[$__range])))",
+          "refId": "A",
+          "legendFormat": "{{user_email}}",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "title": "Top 20 Users by Cost (USD)",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1723,7 +2351,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 80
+        "y": 102
       },
       "id": 52,
       "options": {
@@ -1743,7 +2371,7 @@
         "pieType": "donut",
         "reduceOptions": {
           "calcs": [
-            "sum"
+            "lastNotNull"
           ],
           "fields": "",
           "values": false
@@ -1759,22 +2387,24 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "ffd8h30nfuxhcd"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by (attributes_terminal_type) (count_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${model:pipe} ${effort:pipe} ${query_source:pipe} [$__range]))",
-          "legendFormat": "{{attributes_terminal_type}}",
-          "refId": "A"
+          "expr": "sum by (terminal_type) (max_over_time(claude_code_token_usage_tokens_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\"}[$__range]))",
+          "refId": "A",
+          "legendFormat": "{{terminal_type}}",
+          "instant": false,
+          "range": true
         }
       ],
-      "title": "Requisições por terminal type",
+      "title": "Tokens por terminal type",
       "type": "piechart"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "ffd8h30nfuxhcd"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1833,7 +2463,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 80
+        "y": 102
       },
       "id": 53,
       "options": {
@@ -1855,16 +2485,18 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "ffd8h30nfuxhcd"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by (attributes_model) (sum_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} | unwrap attributes_cache_read_tokens [$__range])) / (sum by (attributes_model) (sum_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} | unwrap attributes_cache_read_tokens [$__range])) + sum by (attributes_model) (sum_over_time({service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\" ${user_email:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe} | unwrap attributes_input_tokens [$__range])))",
-          "legendFormat": "{{attributes_model}}",
-          "refId": "A"
+          "expr": "sum by (model) (max_over_time(claude_code_token_usage_tokens_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\", type=\"cacheRead\"}[$__range])) / (sum by (model) (max_over_time(claude_code_token_usage_tokens_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\", type=\"cacheRead\"}[$__range])) + sum by (model) (max_over_time(claude_code_token_usage_tokens_total{service_name=\"claude-code\", user_email=~\"$user_email\", model=~\"$model\", effort=~\"$effort\", query_source=~\"$query_source\", terminal_type=~\"$terminal_type\", type=\"input\"}[$__range])))",
+          "refId": "A",
+          "legendFormat": "{{model}}",
+          "range": true,
+          "instant": false
         }
       ],
-      "title": "Cache Hit Rate (cache tokens / (cache tokens + input tokens))",
+      "title": "Cache Hit Rate by Model",
       "type": "timeseries"
     },
     {
@@ -1873,7 +2505,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 89
+        "y": 111
       },
       "id": 104,
       "panels": [
@@ -1890,7 +2522,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 71
+            "y": 76
           },
           "id": 40,
           "options": {
@@ -1911,7 +2543,7 @@
                 "uid": "ffd8h30nfuxhcd"
               },
               "editorMode": "code",
-              "expr": "{service_name=~\"claude-code|cowork\"} | json ${user_email:pipe} ${model:pipe} ${effort:pipe} ${query_source:pipe} ${terminal_type:pipe}",
+              "expr": "{service_name=~\"claude-code|cowork\", attributes_user_email=~\"$user_email\", attributes_model=~\"$model\", attributes_effort=~\"$effort\", attributes_query_source=~\"$query_source\", attributes_terminal_type=~\"$terminal_type\"} | json",
               "refId": "A"
             }
           ],
@@ -1919,7 +2551,7 @@
           "type": "logs"
         }
       ],
-      "title": "📜 Eventos (Loki)",
+      "title": "Code + Cowork · eventos brutos (Loki)",
       "type": "row"
     }
   ],
@@ -1934,107 +2566,132 @@
   "templating": {
     "list": [
       {
+        "allValue": ".*",
         "current": {
           "text": "All",
           "value": "$__all"
         },
         "datasource": {
-          "type": "loki",
-          "uid": "ffd8h30nfuxhcd"
+          "type": "prometheus",
+          "uid": "prometheus"
         },
-        "definition": "{service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\"",
+        "definition": "label_values(claude_code_cost_usage_USD_total, user_email)",
         "includeAll": true,
         "label": "User email",
         "multi": true,
         "name": "user_email",
         "options": [],
-        "query": "{service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\"",
+        "query": {
+          "qryType": 1,
+          "query": "label_values(claude_code_cost_usage_USD_total, user_email)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
         "refresh": 1,
-        "regex": "attributes_user_email\":\"([^\"]+)",
+        "regex": "",
         "sort": 1,
         "type": "query"
       },
       {
+        "allValue": ".*",
         "current": {
           "text": "All",
           "value": "$__all"
         },
         "datasource": {
-          "type": "loki",
-          "uid": "ffd8h30nfuxhcd"
+          "type": "prometheus",
+          "uid": "prometheus"
         },
-        "definition": "{service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\"",
+        "definition": "label_values(claude_code_cost_usage_USD_total, model)",
         "includeAll": true,
         "label": "Model",
         "multi": true,
         "name": "model",
         "options": [],
-        "query": "{service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\"",
+        "query": {
+          "qryType": 1,
+          "query": "label_values(claude_code_cost_usage_USD_total, model)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
         "refresh": 1,
-        "regex": "attributes_model\":\"([^\"]+)",
+        "regex": "",
         "sort": 1,
         "type": "query"
       },
       {
+        "allValue": ".*",
         "current": {
           "text": "All",
           "value": "$__all"
         },
         "datasource": {
-          "type": "loki",
-          "uid": "ffd8h30nfuxhcd"
+          "type": "prometheus",
+          "uid": "prometheus"
         },
-        "definition": "{service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\"",
+        "definition": "label_values(claude_code_cost_usage_USD_total, effort)",
         "includeAll": true,
         "label": "Effort",
         "multi": true,
         "name": "effort",
         "options": [],
-        "query": "{service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\"",
+        "query": {
+          "qryType": 1,
+          "query": "label_values(claude_code_cost_usage_USD_total, effort)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
         "refresh": 1,
-        "regex": "attributes_effort\":\"([^\"]+)",
+        "regex": "",
         "sort": 1,
         "type": "query"
       },
       {
+        "allValue": ".*",
         "current": {
           "text": "All",
           "value": "$__all"
         },
         "datasource": {
-          "type": "loki",
-          "uid": "ffd8h30nfuxhcd"
+          "type": "prometheus",
+          "uid": "prometheus"
         },
-        "definition": "{service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\"",
+        "definition": "label_values(claude_code_cost_usage_USD_total, query_source)",
         "includeAll": true,
         "label": "Query Source",
         "multi": true,
         "name": "query_source",
         "options": [],
-        "query": "{service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\"",
+        "query": {
+          "qryType": 1,
+          "query": "label_values(claude_code_cost_usage_USD_total, query_source)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
         "refresh": 1,
-        "regex": "attributes_query_source\":\"([^\"]+)",
+        "regex": "",
         "sort": 1,
         "type": "query"
       },
       {
+        "allValue": ".*",
         "current": {
           "text": "All",
           "value": "$__all"
         },
         "datasource": {
-          "type": "loki",
-          "uid": "ffd8h30nfuxhcd"
+          "type": "prometheus",
+          "uid": "prometheus"
         },
-        "definition": "{service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\"",
+        "definition": "label_values(claude_code_cost_usage_USD_total, terminal_type)",
         "includeAll": true,
         "label": "Terminal Type",
         "multi": true,
         "name": "terminal_type",
         "options": [],
-        "query": "{service_name=~\"claude-code|cowork\"} | json | body=\"claude_code.api_request\" | __error__=\"\"",
+        "query": {
+          "qryType": 1,
+          "query": "label_values(claude_code_cost_usage_USD_total, terminal_type)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
         "refresh": 1,
-        "regex": "attributes_terminal_type\":\"([^\"]+)",
+        "regex": "",
         "sort": 1,
         "type": "query"
       }
@@ -2048,5 +2705,5 @@
   "timezone": "browser",
   "title": "Claude Code Usage",
   "uid": "claude-code-usage",
-  "version": 40
+  "version": 44
 }

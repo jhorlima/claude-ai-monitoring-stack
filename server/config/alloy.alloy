@@ -16,7 +16,14 @@ loki.write "local" {
 livedebugging {}
 
 otelcol.exporter.prometheus "default" {
-  forward_to = [prometheus.remote_write.local.receiver]
+  resource_to_telemetry_conversion = true
+  forward_to                       = [prometheus.remote_write.local.receiver]
+}
+
+otelcol.processor.deltatocumulative "default" {
+  output {
+    metrics = [otelcol.exporter.prometheus.default.input]
+  }
 }
 
 otelcol.exporter.loki "default" {
@@ -37,7 +44,7 @@ otelcol.processor.attributes "inject_node" {
   }
 
   output {
-    metrics = [otelcol.exporter.prometheus.default.input]
+    metrics = [otelcol.processor.deltatocumulative.default.input]
     logs    = [otelcol.exporter.loki.default.input]
   }
 }

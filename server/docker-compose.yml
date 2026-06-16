@@ -3,7 +3,7 @@ services:
     image: grafana/grafana:latest
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
@@ -40,7 +40,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./config/prometheus.public.yml:/etc/prometheus/prometheus.yml:ro
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus-data:/prometheus
 
   alloy:
@@ -55,8 +55,8 @@ services:
       - LOKI_URL=${LOKI_URL:-http://loki:3100/loki/api/v1/push}
       - PROMETHEUS_URL=${PROMETHEUS_URL:-http://prometheus:9090/api/v1/write}
     volumes:
-      - ./config/alloy.public.alloy:/etc/alloy/config.alloy:ro
-    command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
+      - ./config/alloy.alloy:/etc/alloy/config.alloy:ro
+    command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data --stability.level=experimental /etc/alloy/config.alloy
     depends_on:
       - loki
       - prometheus
